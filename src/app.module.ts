@@ -65,6 +65,7 @@ import { MessageRouter } from './whatsapp/routers/sendMessage.router';
 import { GroupRouter } from './whatsapp/routers/group.router';
 import { WebhookRouter } from './whatsapp/routers/webhook.router';
 import session from 'express-session';
+import MemoryStore from 'memorystore';
 import { ROOT_DIR } from './config/path.config';
 import { join } from 'path';
 import { LoggerMiddleware } from './middle/logger.middle';
@@ -200,9 +201,15 @@ export async function AppModule(context: Map<string, any>) {
 
   app.use(urlencoded({ extended: true, limit: '100mb' }), json({ limit: '100mb' }));
 
+  const memoryStore = MemoryStore(session);
+
   app.use(
     session({
       secret: configService.get<string>('SESSION_SECRET'),
+      cookie: { maxAge: 86400000 },
+      store: new memoryStore({
+        checkPeriod: 86400000, // prune expired entries every 24h
+      }),
       resave: false,
       saveUninitialized: false,
       name: 'codechat.api.sid',
