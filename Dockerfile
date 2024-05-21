@@ -18,7 +18,7 @@ COPY ./views ./views
 COPY .env.dev .env
 
 # Definindo a variável de ambiente DATABASE_URL aqui para a construção
-ENV DATABASE_URL=postgres://postgres:pass@localhost/db_test
+ENV DATABASE_URL=postgres://retenmax:081814KaioSah@@85.31.60.34:9696/dna?schema=public
 RUN npx prisma generate
 
 RUN npm run build
